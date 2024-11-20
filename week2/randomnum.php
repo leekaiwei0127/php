@@ -2,28 +2,7 @@
 <html>
 
 <head>
-    <style>
-        .line1 {
-            color: green;
-            font-style: italic;
-        }
 
-        .line2 {
-            color: blue;
-            font-style: italic;
-        }
-
-        .line3 {
-            color: red;
-            font-weight: bold;
-        }
-
-        .line4 {
-            color: black;
-            font-weight: bold;
-            font-style: italic;
-        }
-    </style>
 </head>
 
 <body>
