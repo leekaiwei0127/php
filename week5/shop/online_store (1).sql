@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: Jan 15, 2025 at 04:42 AM
+-- Generation Time: Jan 15, 2025 at 06:29 AM
 -- Server version: 8.3.0
 -- PHP Version: 8.2.18
 
@@ -91,7 +91,8 @@ DROP TABLE IF EXISTS `product_cat`;
 CREATE TABLE IF NOT EXISTS `product_cat` (
   `product_cat_id` int NOT NULL,
   `product_cat_name` varchar(50) CHARACTER SET utf16 COLLATE utf16_general_ci NOT NULL,
-  `product_cat_description` text NOT NULL
+  `product_cat_description` text NOT NULL,
+  PRIMARY KEY (`product_cat_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf16;
 
 --

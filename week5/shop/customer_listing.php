@@ -8,6 +8,7 @@
 </head>
 
 <body>
+
     <!-- container -->
     <div class="container">
         <div class="page-header">
@@ -15,6 +16,13 @@
 
             <!-- PHP code to read records will be here -->
             <?php
+
+            // Check if the user is logged in
+            if (!isset($_SESSION['is_logged_in']) || $_SESSION['is_logged_in'] !== true) {
+                header('Location: login.php'); // Redirect to login page if not logged in
+                exit();
+            }
+
             // include database connection
             include 'config/database.php';
 
