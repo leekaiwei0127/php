@@ -91,7 +91,7 @@ session_start();
                             echo $hashed_password;
                             if ($password == $hashed_password) {
                                 if ($fetch_status == 1) {
-                                    $_SESSION['user_id'] = 1;
+                                    $_SESSION['user_id'];
                                     $_SESSION['username'] = $email;
                                     $_SESSION['is_logged_in'] = true;
                                     header("Location:product_listing.php");
