@@ -12,10 +12,9 @@ include "menu.php";
 </head>
 
 <body>
-    container →
     <div class="container">
         <div class="page-header">
-            <h1>Update Product</h1>
+            <h1>Update Customer</h1>
         </div>
         <?php
         // get passed parameter value, in this case, the record ID
@@ -28,7 +27,7 @@ include "menu.php";
         // read current record's data
         try {
             // prepare select query
-            $query = "SELECT id, name, description, price FROM products WHERE id = ? LIMIT 0,1";
+            $query = "SELECT id, username, firstname, lastname,gender,date_of_birth FROM customer WHERE id = ? LIMIT 0,1";
             $stmt = $con->prepare($query);
 
             // this is the first question mark
@@ -41,9 +40,15 @@ include "menu.php";
             $row = $stmt->fetch(PDO::FETCH_ASSOC);
 
             // values to fill up our form
-            $name = $row['name'];
-            $description = $row['description'];
-            $price = $row['price'];
+            $name = $row['username'];
+
+            $firstname = $row['firstname'];
+
+            $lastname = $row['lastname'];
+
+            $gender = $row['gender'];
+
+            $DOB = $row['date_of_birth'];
         }
 
         // show error
@@ -56,16 +61,24 @@ include "menu.php";
         <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"] . "?id={$id}"); ?>" method="post">
             <table class='table table-hover table-responsive table-bordered'>
                 <tr>
-                    <td>Name</td>
-                    <td><input type='text' name='name' value="<?php echo $name;  ?>" class='form-control' /></td>
+                    <td>userame</td>
+                    <td><input type='text' name='yourname' value="<?php echo $name;  ?>" class='form-control' /></td>
                 </tr>
                 <tr>
-                    <td>Description</td>
-                    <td><textarea name='description' class='form-control'><?php echo $description;  ?></textarea></td>
+                    <td>firstname</td>
+                    <td><textarea name='firstname' class='form-control'><?php echo $firstname;  ?></textarea></td>
                 </tr>
                 <tr>
-                    <td>Price</td>
-                    <td><input type='text' name='price' value="<?php echo $price;  ?>" class='form-control' /></td>
+                    <td>lastname</td>
+                    <td><input type='text' name='lastname' value="<?php echo $lastname;  ?>" class='form-control' /></td>
+                </tr>
+                <tr>
+                    <td>gender</td>
+                    <td><input type='text' name='gender' value="<?php echo $gender;  ?>" class='form-control' /></td>
+                </tr>
+                <tr>
+                    <td>Date of birth</td>
+                    <td><input type='date' name='date_of_birth' value="<?php echo $DOB;  ?>" class='form-control' /></td>
                 </tr>
                 <tr>
                     <td></td>

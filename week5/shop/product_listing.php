@@ -1,4 +1,7 @@
 <!DOCTYPE HTML>
+<?php
+include "menu.php";
+?>
 <html>
 
 <head>
@@ -16,14 +19,15 @@
 
         <!-- PHP code to read records will be here -->
         <?php
+
         // include database connection
         include 'config/database.php';
 
         // delete message prompt will be here
 
         // select all data
-        $query = "SELECT id, name, description, price, product_cat FROM products 
-        INNER JOIN product_cat on products.product_cat =product_cat.product_cat_name ORDER BY id DESC";
+        $query = "SELECT id, name, description, price, product_cat_name FROM products 
+        INNER JOIN product_cat on products.product_cat =product_cat.product_cat_id ORDER BY id DESC";
         $stmt = $con->prepare($query);
         $stmt->execute();
 
@@ -55,6 +59,7 @@
                 // extract row
                 // this will make $row['firstname'] to just $firstname only
                 extract($row);
+
                 // creating new table row per record
                 echo "<tr>";
                 echo "<td>{$id}</td>";

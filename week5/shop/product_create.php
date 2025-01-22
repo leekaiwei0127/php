@@ -1,4 +1,7 @@
 <!DOCTYPE HTML>
+<?php
+include "menu.php";
+?>
 <html>
 
 
@@ -27,11 +30,7 @@
     <?php
 
 
-    // Check if the user is logged in
-    if (!isset($_SESSION['is_logged_in']) || $_SESSION['is_logged_in'] !== true) {
-        header('Location: login.php'); // Redirect to login page if not logged in
-        exit();
-    }
+
 
     if ($_POST) {
         // include database connection
@@ -57,34 +56,21 @@
             }
             //Check price
             if (empty($price)) {
-                if (!is_int($price)) {
-                    $errors[] = 'Price must be number(s).';
-                }
-                $errors[] = 'Price is required.';
+                $errors[] = 'price is empty.';
             }
+
             //Check promotion price
-            if (!is_int($promotion_price)) {
-                if ($promotion_price > $price) {
-                    $errors[] = 'Promotion price must be lower than price.';
-                }
-                $errors[] = 'Promotion price must be number(s).';
+            if (empty($promotion_price)) {
+                $errors[] = 'promotion_price is empty.';
             }
+
             //Check manufacture date
             if (empty($manufacture_date)) {
                 $errors[] = 'Manufacture Date is empty.';
-            } else {
-                if (checkdate(12, 31, -400)) {
-                    $errors[] = 'Manufacture Date is not valid.';
-                }
             }
             //Check expired date
             if (empty($expired_date)) {
                 $errors[] = 'Expired Date is empty.';
-            } else {
-                $diff = date_diff($manufacture_date, $expired_date);
-                if ($diff->invert == 1) {
-                    $errors[] = "Expired Date must be later than Manufacture Date.";
-                }
             }
             //Check Category
             if (empty($product_category)) {
