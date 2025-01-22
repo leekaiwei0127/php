@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: Jan 15, 2025 at 06:29 AM
+-- Generation Time: Jan 22, 2025 at 04:40 AM
 -- Server version: 8.3.0
 -- PHP Version: 8.2.18
 
@@ -46,9 +46,8 @@ CREATE TABLE IF NOT EXISTS `customer` (
 --
 
 INSERT INTO `customer` (`id`, `username`, `password`, `firstname`, `lastname`, `gender`, `date_of_birth`, `registration_date`, `account_status`) VALUES
-(1, 'xiaokai', 'fejnwafwaef', 'wavwe', 'vaweva', 'male', '2005-01-27', '2024-12-18 09:17:16', 1),
-(2, 'xiaokai', 'efef', 'wavwe', 'vaweva', 'male', '2005-01-27', '2024-12-18 14:40:55', 0),
-(3, 'xiaokai', 'ewfaw', 'wavwe', 'vaweva', 'male', '2024-02-20', '2024-12-18 14:55:32', 0);
+(2, 'xiaokai', 'efef', 'wavwe', 'vaweva', 'male', '2005-01-27', '2024-12-18 14:40:55', 1),
+(3, 'xiaokafsjdfsf', 'ewfaw', 'wavwe', 'vaweva', 'male', '2024-02-20', '2024-12-18 14:55:32', 0);
 
 -- --------------------------------------------------------
 
