@@ -1,12 +1,16 @@
 <!DOCTYPE HTML>
 <?php
 include "menu.php";
+session_start();
+if (!isset($_SESSION['is_logged_in']) || $_SESSION['is_logged_in'] !== true) {
+    header('Location: login.php');
+    exit();
+}
 ?>
 <html>
 
 <head>
-    <title>PDO - Read Records - PHP CRUD Tutorial</title>
-
+    <title>PDO - Update Customer - PHP CRUD Tutorial</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </head>
@@ -17,68 +21,104 @@ include "menu.php";
             <h1>Update Customer</h1>
         </div>
         <?php
-        // get passed parameter value, in this case, the record ID
-        // isset() is a PHP function used to verify if a value is there or not
         $id = isset($_GET['id']) ? $_GET['id'] : die('ERROR: Record ID not found.');
-
-        //include database connection
         include 'config/database.php';
 
-        // read current record's data
         try {
-            // prepare select query
-            $query = "SELECT id, username, firstname, lastname,gender,date_of_birth FROM customer WHERE id = ? LIMIT 0,1";
+            $query = "SELECT id, username, firstname, lastname, gender, date_of_birth, password FROM customer WHERE id = ? LIMIT 0,1";
             $stmt = $con->prepare($query);
-
-            // this is the first question mark
             $stmt->bindParam(1, $id);
-
-            // execute our query
             $stmt->execute();
-
-            // store retrieved row to a variable
             $row = $stmt->fetch(PDO::FETCH_ASSOC);
 
-            // values to fill up our form
             $name = $row['username'];
-
             $firstname = $row['firstname'];
-
             $lastname = $row['lastname'];
-
             $gender = $row['gender'];
-
             $DOB = $row['date_of_birth'];
-        }
-
-        // show error
-        catch (PDOException $exception) {
+            $currentPasswordHash = $row['password'];
+        } catch (PDOException $exception) {
             die('ERROR: ' . $exception->getMessage());
         }
         ?>
 
+        <?php
+        if ($_POST) {
+            try {
+                $name = htmlspecialchars(strip_tags($_POST['username']));
+                $firstname = htmlspecialchars(strip_tags($_POST['firstname']));
+                $lastname = htmlspecialchars(strip_tags($_POST['lastname']));
+                $gender = htmlspecialchars(strip_tags($_POST['gender']));
+                $DOB = htmlspecialchars(strip_tags($_POST['date_of_birth']));
+
+                $oldPassword = $_POST['old_password'];
+                $newPassword = $_POST['new_password'];
+                $confirmPassword = $_POST['confirm_password'];
+
+                $updatePassword = false;
+                $query = "UPDATE customer SET username=:username, firstname=:firstname, lastname=:lastname, gender=:gender, date_of_birth=:date_of_birth";
+                if ($updatePassword) {
+                    $query .= ", password=:password";
+                }
+                $query .= " WHERE id = :id";
+
+                $stmt = $con->prepare($query);
+
+                $stmt->bindParam(':username', $name);
+                $stmt->bindParam(':firstname', $firstname);
+                $stmt->bindParam(':lastname', $lastname);
+                $stmt->bindParam(':gender', $gender);
+                $stmt->bindParam(':date_of_birth', $DOB);
+                $stmt->bindParam(':id', $id);
+
+                if ($updatePassword) {
+                    $stmt->bindParam(':password', $newPasswordHash);
+                }
+
+                if ($stmt->execute()) {
+                    echo "<div class='alert alert-success'>Record was updated.</div>";
+                } else {
+                    echo "<div class='alert alert-danger'>Unable to update record. Please try again.</div>";
+                }
+            } catch (PDOException $exception) {
+                die('ERROR: ' . $exception->getMessage());
+            }
+        }
+        ?>
 
         <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"] . "?id={$id}"); ?>" method="post">
             <table class='table table-hover table-responsive table-bordered'>
                 <tr>
-                    <td>userame</td>
-                    <td><input type='text' name='yourname' value="<?php echo $name;  ?>" class='form-control' /></td>
+                    <td>Username</td>
+                    <td><input type='text' name='username' value="<?php echo $name; ?>" class='form-control' /></td>
                 </tr>
                 <tr>
-                    <td>firstname</td>
-                    <td><textarea name='firstname' class='form-control'><?php echo $firstname;  ?></textarea></td>
+                    <td>Firstname</td>
+                    <td><textarea name='firstname' class='form-control'><?php echo $firstname; ?></textarea></td>
                 </tr>
                 <tr>
-                    <td>lastname</td>
-                    <td><input type='text' name='lastname' value="<?php echo $lastname;  ?>" class='form-control' /></td>
+                    <td>Lastname</td>
+                    <td><input type='text' name='lastname' value="<?php echo $lastname; ?>" class='form-control' /></td>
                 </tr>
                 <tr>
-                    <td>gender</td>
-                    <td><input type='text' name='gender' value="<?php echo $gender;  ?>" class='form-control' /></td>
+                    <td>Gender</td>
+                    <td><input type='text' name='gender' value="<?php echo $gender; ?>" class='form-control' /></td>
                 </tr>
                 <tr>
-                    <td>Date of birth</td>
-                    <td><input type='date' name='date_of_birth' value="<?php echo $DOB;  ?>" class='form-control' /></td>
+                    <td>Date of Birth</td>
+                    <td><input type='date' name='date_of_birth' value="<?php echo $DOB; ?>" class='form-control' /></td>
+                </tr>
+                <tr>
+                    <td>Old Password</td>
+                    <td><input type='password' name='old_password' class='form-control' /></td>
+                </tr>
+                <tr>
+                    <td>New Password</td>
+                    <td><input type='password' name='new_password' class='form-control' /></td>
+                </tr>
+                <tr>
+                    <td>Confirm Password</td>
+                    <td><input type='password' name='confirm_password' class='form-control' /></td>
                 </tr>
                 <tr>
                     <td></td>
@@ -89,9 +129,7 @@ include "menu.php";
                 </tr>
             </table>
         </form>
-
     </div>
-    <!-- end .container -->
 </body>
 
 </html>

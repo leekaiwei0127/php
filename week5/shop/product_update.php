@@ -1,6 +1,11 @@
 <!DOCTYPE HTML>
 <?php
 include "menu.php";
+session_start();
+if (!isset($_SESSION['is_logged_in']) || $_SESSION['is_logged_in'] !== true) {
+    header('Location: login.php'); // Redirect to login page if not logged in
+    exit();
+}
 ?>
 <html>
 
@@ -12,7 +17,7 @@ include "menu.php";
 </head>
 
 <body>
-    container →
+
     <div class="container">
         <div class="page-header">
             <h1>Update Product</h1>

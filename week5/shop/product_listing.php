@@ -1,6 +1,12 @@
 <!DOCTYPE HTML>
 <?php
 include "menu.php";
+session_start();
+// Check if the user is logged in
+if (!isset($_SESSION['is_logged_in']) || $_SESSION['is_logged_in'] !== true) {
+    header('Location: login.php'); // Redirect to login page if not logged in
+    exit();
+}
 ?>
 <html>
 
@@ -72,7 +78,7 @@ include "menu.php";
                 echo "<a href='product_details.php?id={$id}' class='btn btn-info m-r-1em'>Read</a>";
 
                 // we will use this links on next part of this post
-                echo "<a href='update.php?id={$id}' class='btn btn-primary m-r-1em'>Edit</a>";
+                echo "<a href='product_update.php?id={$id}' class='btn btn-primary m-r-1em'>Edit</a>";
 
                 // we will use this links on next part of this post
                 echo "<a href='#' onclick='delete_user({$id});'  class='btn btn-danger'>Delete</a>";
@@ -88,6 +94,7 @@ include "menu.php";
         else {
             echo "<div class='alert alert-danger'>No records found.</div>";
         }
+
         ?>
 
 

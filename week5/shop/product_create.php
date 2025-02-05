@@ -1,6 +1,11 @@
 <!DOCTYPE HTML>
 <?php
 include "menu.php";
+session_start();
+if (!isset($_SESSION['is_logged_in']) || $_SESSION['is_logged_in'] !== true) {
+    header('Location: login.php'); // Redirect to login page if not logged in
+    exit();
+}
 ?>
 <html>
 
@@ -105,9 +110,7 @@ include "menu.php";
                     echo "<div class='alert alert-danger'>Unable to save record.</div>";
                 }
             }
-        }
-        // show error
-        catch (PDOException $exception) {
+        } catch (PDOException $exception) {
             die('ERROR: ' . $exception->getMessage());
         }
     }

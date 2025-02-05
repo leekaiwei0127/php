@@ -1,6 +1,11 @@
 <!DOCTYPE HTML>
 <?php
 include "menu.php";
+session_start();
+if (!isset($_SESSION['is_logged_in']) || $_SESSION['is_logged_in'] !== true) {
+    header('Location: login.php'); // Redirect to login page if not logged in
+    exit();
+}
 ?>
 <html>
 
@@ -17,11 +22,7 @@ include "menu.php";
         <div class="page-header">
             <h1>Read Customer</h1>
 
-            <!-- PHP code to read records will be here -->
             <?php
-
-            // Check if the user is logged in
-
 
             // include database connection
             include 'config/database.php';
@@ -36,8 +37,7 @@ include "menu.php";
             // this is how to get number of rows returned
             $num = $stmt->rowCount();
 
-            // link to create record form
-            echo "<a href='create.php' class='btn btn-primary m-b-1em'>Create New Product</a>";
+
 
             //check if more than 0 record found
             if ($num > 0) {
