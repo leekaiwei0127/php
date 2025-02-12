@@ -35,7 +35,7 @@ if (!isset($_SESSION['is_logged_in']) || $_SESSION['is_logged_in'] !== true) {
         // read current record's data
         try {
             // prepare select query
-            $query = "SELECT id, name, description, price FROM products WHERE id = ? LIMIT 0,1";
+            $query = "SELECT id, name, description, price,product_cat,promotion_price,manufacture_date,expired_date FROM products WHERE id = ? LIMIT 0,1";
             $stmt = $con->prepare($query);
 
             // this refer to the first question mark
@@ -48,9 +48,13 @@ if (!isset($_SESSION['is_logged_in']) || $_SESSION['is_logged_in'] !== true) {
             $row = $stmt->fetch(PDO::FETCH_ASSOC);
 
             // values to fill up our form
-            $name = $row['name'];
-            $description = $row['description'];
-            $price = $row['price'];
+            $f_name = $row['name'];
+            $f_description = $row['description'];
+            $f_price = $row['price'];
+            $f_product_cat = $row['product_cat'];
+            $f_promotion_price = $row['promotion_price'];
+            $f_manufacture_date = $row['manufacture_date'];
+            $f_expired_date = $row['expired_date'];
         }
 
         // show error
@@ -67,22 +71,39 @@ if (!isset($_SESSION['is_logged_in']) || $_SESSION['is_logged_in'] !== true) {
         <table class='table table-hover table-responsive table-bordered'>
             <tr>
                 <td>Name</td>
-                <td><?php echo $name;  ?></td>
+                <td><?php echo $f_name;  ?></td>
             </tr>
             <tr>
                 <td>Description</td>
-                <td><?php echo $description;  ?></td>
+                <td><?php echo $f_description;  ?></td>
             </tr>
             <tr>
                 <td>Price</td>
-                <td><?php echo $price;  ?></td>
+                <td><?php echo $f_price;  ?></td>
+            </tr>
+            <tr>
+                <td>Promotion price</td>
+                <td><?php echo $f_promotion_price;  ?></td>
+            </tr>
+            <tr>
+                <td>Product category</td>
+                <td><?php echo $f_product_cat;  ?></td>
+            </tr>
+            <tr>
+                <td>manufacture date</td>
+                <td><?php echo $f_manufacture_date;  ?></td>
+            </tr>
+            <tr>
+                <td>expired date</td>
+                <td><?php echo $f_expired_date;  ?></td>
             </tr>
             <tr>
                 <td></td>
                 <td>
-                    <a href='index.php' class='btn btn-danger'>Back to read products</a>
+                    <a href='product_listing.php' class='btn btn-danger'>Back to read products</a>
                 </td>
             </tr>
+
         </table>
 
 

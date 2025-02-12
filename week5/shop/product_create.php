@@ -64,11 +64,6 @@ if (!isset($_SESSION['is_logged_in']) || $_SESSION['is_logged_in'] !== true) {
                 $errors[] = 'price is empty.';
             }
 
-            //Check promotion price
-            if (empty($promotion_price)) {
-                $errors[] = 'promotion_price is empty.';
-            }
-
             //Check manufacture date
             if (empty($manufacture_date)) {
                 $errors[] = 'Manufacture Date is empty.';
@@ -90,7 +85,7 @@ if (!isset($_SESSION['is_logged_in']) || $_SESSION['is_logged_in'] !== true) {
                 echo "</ul></div>";
             } else {
                 // insert query
-                $query = "INSERT INTO products SET name=:name, description=:description, price=:price, promotion_price=:promotion_price, manufacture_date=:manufactured_date, expired_date=:expired_date, created=:created";
+                $query = "INSERT INTO products SET name=:name, description=:description, product_cat=:product_cat, price=:price, promotion_price=:promotion_price, manufacture_date=:manufacture_date, expired_date=:expired_date, created=:created";
                 // prepare query for execution
                 $stmt = $con->prepare($query);
                 // bind the parameters
@@ -100,6 +95,7 @@ if (!isset($_SESSION['is_logged_in']) || $_SESSION['is_logged_in'] !== true) {
                 $stmt->bindParam(':promotion_price', $promotion_price);
                 $stmt->bindParam(':manufacture_date', $manufacture_date);
                 $stmt->bindParam(':expired_date', $expired_date);
+                $stmt->bindParam(':product_cat', $product_category);
                 // specify when this record was inserted to the database
                 $created = date('Y-m-d H:i:s');
                 $stmt->bindParam(':created', $created);
@@ -173,7 +169,7 @@ if (!isset($_SESSION['is_logged_in']) || $_SESSION['is_logged_in'] !== true) {
                     <td></td>
                     <td>
                         <input type='submit' value='Save' class='btn btn-primary' />
-                        <a href='index.php' class='btn btn-danger'>Back to read products</a>
+                        <a href='product_listing.php' class='btn btn-danger'>Back to read products</a>
                     </td>
                 </tr>
             </table>

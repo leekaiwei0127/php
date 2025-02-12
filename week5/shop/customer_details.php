@@ -103,7 +103,7 @@ if (!isset($_SESSION['is_logged_in']) || $_SESSION['is_logged_in'] !== true) {
             <tr>
                 <td></td>
                 <td>
-                    <a href='index.php' class='btn btn-danger'>Back to read products</a>
+                    <a href='customer_listing.php' class='btn btn-danger'>Back to read products</a>
                 </td>
             </tr>
         </table>

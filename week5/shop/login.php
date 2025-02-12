@@ -88,7 +88,7 @@ session_start();
                             $row = $stmt->fetch(PDO::FETCH_ASSOC);
                             $hashed_password = $row['password'];
                             $fetch_status = $row['account_status'];
-                            echo $hashed_password;
+
                             if ($password == $hashed_password) {
                                 if ($fetch_status == 1) {
                                     $_SESSION['user_id'] = 1;
@@ -97,13 +97,13 @@ session_start();
                                     header("Location:product_listing.php");
                                     exit();
                                 } else {
-                                    echo "<div class='alert alert-success'>Account not active</div>";
+                                    echo "<div class='alert alert-danger'>Account not active</div>";
                                 }
                             } else {
                                 echo "<div class='alert alert-danger'>Invalid password.</div>";
                             }
                         } else {
-                            echo "<div class='alert alert-danger'>Invalid username or email.</div";
+                            echo "<div class='alert alert-danger'>Invalid username or email.</div>";
                         }
                     }
                 }

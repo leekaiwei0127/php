@@ -32,11 +32,11 @@ if (!isset($_SESSION['is_logged_in']) || $_SESSION['is_logged_in'] !== true) {
             $row = $stmt->fetch(PDO::FETCH_ASSOC);
 
             $name = $row['username'];
-            $firstname = $row['firstname'];
-            $lastname = $row['lastname'];
-            $gender = $row['gender'];
-            $DOB = $row['date_of_birth'];
-            $currentPasswordHash = $row['password'];
+            $frname = $row['firstname'];
+            $ltname = $row['lastname'];
+            $gd = $row['gender'];
+            $dob = $row['date_of_birth'];
+            $password = $row['password'];
         } catch (PDOException $exception) {
             die('ERROR: ' . $exception->getMessage());
         }
@@ -44,44 +44,64 @@ if (!isset($_SESSION['is_logged_in']) || $_SESSION['is_logged_in'] !== true) {
 
         <?php
         if ($_POST) {
-            try {
-                $name = htmlspecialchars(strip_tags($_POST['username']));
-                $firstname = htmlspecialchars(strip_tags($_POST['firstname']));
-                $lastname = htmlspecialchars(strip_tags($_POST['lastname']));
-                $gender = htmlspecialchars(strip_tags($_POST['gender']));
-                $DOB = htmlspecialchars(strip_tags($_POST['date_of_birth']));
+            $oldPassword = $_POST['old_password'];
+            $newPassword = $_POST['new_password'];
+            $confirmPassword = $_POST['confirm_password'];
 
-                $oldPassword = $_POST['old_password'];
-                $newPassword = $_POST['new_password'];
-                $confirmPassword = $_POST['confirm_password'];
-
-                $updatePassword = false;
-                $query = "UPDATE customer SET username=:username, firstname=:firstname, lastname=:lastname, gender=:gender, date_of_birth=:date_of_birth";
-                if ($updatePassword) {
-                    $query .= ", password=:password";
+            if ($password !== $oldPassword) {
+                $errors[] = "password does not match.";
+            }
+            if (!empty($oldPassword)) {
+                if (empty($newPassword) || empty($confirmPassword)) {
+                    $errors[] = "your new password cannot be empty.";
                 }
-                $query .= " WHERE id = :id";
+            }
 
-                $stmt = $con->prepare($query);
-
-                $stmt->bindParam(':username', $name);
-                $stmt->bindParam(':firstname', $firstname);
-                $stmt->bindParam(':lastname', $lastname);
-                $stmt->bindParam(':gender', $gender);
-                $stmt->bindParam(':date_of_birth', $DOB);
-                $stmt->bindParam(':id', $id);
-
-                if ($updatePassword) {
-                    $stmt->bindParam(':password', $newPasswordHash);
+            if (!empty($newPassword) && !empty($confirmPassword)) {
+                if ($newPassword !== $confirmPassword) {
+                    $errors[] = "new and confirm password does not match.";
                 }
+            }
 
-                if ($stmt->execute()) {
-                    echo "<div class='alert alert-success'>Record was updated.</div>";
-                } else {
-                    echo "<div class='alert alert-danger'>Unable to update record. Please try again.</div>";
+            if (!empty($errors)) {
+                echo "<div class='alert alert-danger'><ul>";
+                foreach ($errors as $error) {
+                    echo "<li>{$error}</li>";
                 }
-            } catch (PDOException $exception) {
-                die('ERROR: ' . $exception->getMessage());
+                echo "</ul></div>";
+            } else {
+                try {
+                    $name = htmlspecialchars(strip_tags($_POST['username']));
+                    $firstname = htmlspecialchars(strip_tags($_POST['firstname']));
+                    $lastname = htmlspecialchars(strip_tags($_POST['lastname']));
+                    $gender = htmlspecialchars(strip_tags($_POST['gender']));
+                    $DOB = htmlspecialchars(strip_tags($_POST['date_of_birth']));
+
+                    $query = "UPDATE customer SET username=:username, password=:password,firstname=:firstname, lastname=:lastname, gender=:gender, date_of_birth=:date_of_birth WHERE id =:id";
+
+                    $stmt = $con->prepare($query);
+
+                    if (!empty($confirmPassword)) {
+                        $stmt->bindParam(':password', $confirmPassword);
+                    } else {
+                        $stmt->bindParam(':password', $password);
+                    }
+
+                    $stmt->bindParam(':username', $name);
+                    $stmt->bindParam(':firstname', $firstname);
+                    $stmt->bindParam(':lastname', $lastname);
+                    $stmt->bindParam(':gender', $gender);
+                    $stmt->bindParam(':date_of_birth', $DOB);
+                    $stmt->bindParam(":id", $id);
+
+                    if ($stmt->execute()) {
+                        echo "<div class='alert alert-success'>Record was updated.</div>";
+                    } else {
+                        echo "<div class='alert alert-danger'>Unable to update record. Please try again.</div>";
+                    }
+                } catch (PDOException $exception) {
+                    die('ERROR: ' . $exception->getMessage());
+                }
             }
         }
         ?>
@@ -94,19 +114,19 @@ if (!isset($_SESSION['is_logged_in']) || $_SESSION['is_logged_in'] !== true) {
                 </tr>
                 <tr>
                     <td>Firstname</td>
-                    <td><textarea name='firstname' class='form-control'><?php echo $firstname; ?></textarea></td>
+                    <td><textarea name='firstname' class='form-control'><?php echo $frname; ?></textarea></td>
                 </tr>
                 <tr>
                     <td>Lastname</td>
-                    <td><input type='text' name='lastname' value="<?php echo $lastname; ?>" class='form-control' /></td>
+                    <td><input type='text' name='lastname' value="<?php echo $ltname; ?>" class='form-control' /></td>
                 </tr>
                 <tr>
                     <td>Gender</td>
-                    <td><input type='text' name='gender' value="<?php echo $gender; ?>" class='form-control' /></td>
+                    <td><input type='text' name='gender' value="<?php echo $gd; ?>" class='form-control' /></td>
                 </tr>
                 <tr>
                     <td>Date of Birth</td>
-                    <td><input type='date' name='date_of_birth' value="<?php echo $DOB; ?>" class='form-control' /></td>
+                    <td><input type='date' name='date_of_birth' value="<?php echo $dob; ?>" class='form-control' /></td>
                 </tr>
                 <tr>
                     <td>Old Password</td>
@@ -124,7 +144,7 @@ if (!isset($_SESSION['is_logged_in']) || $_SESSION['is_logged_in'] !== true) {
                     <td></td>
                     <td>
                         <input type='submit' value='Save Changes' class='btn btn-primary' />
-                        <a href='index.php' class='btn btn-danger'>Back to read products</a>
+                        <a href='customer_listing.php' class='btn btn-danger'>Back to read products</a>
                     </td>
                 </tr>
             </table>
